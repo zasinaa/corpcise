@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Corpcise</title>
+    <script src="https://pyscript.net/latest/pyscript.js"></script>
+</head>
+<body>
+    <h1>Text Error Checker</h1>
+    <textarea id="text" rows="10" cols="50"></textarea><br>
+    <button onclick="checkText()">Check Text</button>
+    <div id="result"></div>
+
+    <py-script>
+        import language_tool_python
+
+        tool = language_tool_python.LanguageTool('cs')
+
+        def checkText():
+            text = Element("text").element.value
+            matches = tool.check(text)
+            errors = [match.message for match in matches]
+            Element("result").element.innerHTML = "<ul>" + "".join(f"<li>{error}</li>" for error in errors) + "</ul>"
+    </py-script>
+</body>
+</html>
