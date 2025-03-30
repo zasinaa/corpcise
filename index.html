@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Text Error Checker</title>
+    <title>Corpcise</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -87,6 +87,11 @@
         .active {
             display: block;
         }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -101,6 +106,7 @@
             <textarea id="text" rows="10" cols="50"></textarea><br>
             <button onclick="checkText()">Check Text</button>
             <div id="result"></div>
+            <div id="loading" class="loading">Evaluating text, please wait...</div>
         </div>
         <div id="corpus-exercises" class="content">
             <h1>Corpus Exercises</h1>
@@ -116,6 +122,13 @@
     <script>
         function checkText() {
             const text = document.getElementById('text').value;
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
+            
+            // Show loading message
+            loadingDiv.style.display = 'block';
+            resultDiv.innerHTML = '';
+
             $.ajax({
                 url: 'https://www.opravidlo.cz/api/check',
                 method: 'POST',
@@ -127,7 +140,7 @@
                 },
                 success: function(response) {
                     let errors = response.errors;
-                    let resultDiv = document.getElementById('result');
+                    loadingDiv.style.display = 'none'; // Hide loading message
                     if (errors.length === 0) {
                         resultDiv.innerHTML = '<p>No errors found. Great job!</p>';
                     } else {
@@ -136,6 +149,10 @@
                         }).join('');
                         resultDiv.innerHTML = `<ul>${errorList}</ul>`;
                     }
+                },
+                error: function() {
+                    loadingDiv.style.display = 'none'; // Hide loading message
+                    resultDiv.innerHTML = '<p>There was an error processing your request. Please try again later.</p>';
                 }
             });
         }
