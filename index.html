@@ -92,6 +92,19 @@
             text-align: center;
             margin-top: 20px;
         }
+        .progress-bar {
+            width: 100%;
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .progress {
+            width: 0;
+            height: 20px;
+            background-color: #007aff;
+            transition: width 0.5s;
+        }
     </style>
 </head>
 <body>
@@ -107,10 +120,39 @@
             <button onclick="checkText()">Check Text</button>
             <div id="result"></div>
             <div id="loading" class="loading">Evaluating text, please wait...</div>
+            <div class="progress-bar">
+                <div id="progress" class="progress"></div>
+            </div>
         </div>
         <div id="corpus-exercises" class="content">
             <h1>Corpus Exercises</h1>
-            <p>Here you can find various exercises to improve your text.</p>
+            <h2>Gramatická cvičení</h2>
+            <ul>
+                <li>Procvičování shody podmětu s přísudkem.</li>
+                <li>Procvičování správného používání velkých písmen.</li>
+                <li>Procvičování správného používání interpunkce.</li>
+            </ul>
+            <h2>Pravopisná cvičení</h2>
+            <ul>
+                <li>Procvičování správného psaní i/y.</li>
+                <li>Procvičování správného psaní mě/mně.</li>
+                <li>Procvičování správného psaní předpon s/z.</li>
+            </ul>
+            <h2>Stylová cvičení</h2>
+            <ul>
+                <li>Procvičování jasného a stručného vyjadřování.</li>
+                <li>Procvičování používání synonym.</li>
+                <li>Procvičování správného používání přímé řeči.</li>
+            </ul>
+            <h2>Cvičení z portálu Český národní korpus</h2>
+            <ul>
+                <li><a href="https://korpus.cz/proskoly">Český národní korpus - Pro školy</a> - Repozitář korpusových cvičení.</li>
+                <li><a href="https://korpus.cz/proskoly#22">Česká přísloví</a> - Cvičení na spojování a hledání.</li>
+                <li><a href="https://korpus.cz/proskoly#21">Moderní elektronika</a> - Cvičení na slovní zásobu.</li>
+                <li><a href="https://korpus.cz/proskoly#20">Česká přirovnání</a> - Cvičení na doplňování a hledání.</li>
+                <li><a href="https://korpus.cz/proskoly#19">Rozdíly ve významu slov</a> - Cvičení na porovnávání a hledání.</li>
+                <li><a href="https://korpus.cz/proskoly#18">Idiomy se slovem srdce</a> - Cvičení na doplňování a hledání.</li>
+            </ul>
         </div>
         <div id="about" class="content">
             <h1>About</h1>
@@ -124,20 +166,31 @@
             const text = document.getElementById('text').value;
             const loadingDiv = document.getElementById('loading');
             const resultDiv = document.getElementById('result');
+            const progressBar = document.getElementById('progress');
             
-            // Show loading message
+            // Show loading message and reset progress bar
             loadingDiv.style.display = 'block';
             resultDiv.innerHTML = '';
+            progressBar.style.width = '0';
 
-            const response = await fetch('https://talkai.info/api/check', {
+            // Simulate progress bar
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                }
+            }, 500);
+
+            const response = await fetch('https://api-inference.huggingface.co/models/bert-base-cased', {
                 method: 'POST',
                 headers: {
+                    'Authorization': 'Bearer YOUR_HUGGINGFACE_API_KEY',
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    prompt: `Analyze the following text for errors and provide suggestions for improvement:\n\n${text}`,
-                    max_tokens: 1000,
-                    temperature: 0.7
+                    inputs: text
                 })
             });
 
@@ -145,9 +198,230 @@
             loadingDiv.style.display = 'none'; // Hide loading message
 
             if (response.ok) {
-                resultDiv.innerHTML = `<p>${data.choices[0].text}</p>`;
+               
+
+
+1
+Favicon type
+TalkAI (chatGTP without login) stopped working on Brave
+Zobrazit více
+
+
+
+
+Obsah vygenerovaný umělou inteligencí může být nesprávný.
+Počet zbývajících odpovědí: 2
+You said:
+
+
+Napsal jsi celý kód správně? Zdá se mi, že něco chybí na konci.
+Copilot said:
+Copilot
+Omlouvám se za neúplný kód. Zde je kompletní a opravený kód, který používá Hugging Face API pro analýzu textu:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Text Error Checker</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #121212;
+            color: #e0e0e0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #1e1e1e;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 150px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #2e2e2e;
+            color: #e0e0e0;
+            margin-bottom: 20px;
+        }
+        button {
+            background-color: #007aff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #005bb5;
+        }
+        #result {
+            margin-top: 20px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        li {
+            background-color: #2e2e2e;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+        nav {
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+            cursor: pointer.
+        }
+        nav a:hover {
+            color: #007aff;
+        }
+        .content {
+            display: none;
+        }
+        .active {
+            display: block;
+        }
+        .loading {
+            display: none;
+            text-align: center;
+            margin-top: 20px;
+        }
+        .progress-bar {
+            width: 100%;
+            background-color: #333;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+        .progress {
+            width: 0;
+            height: 20px;
+            background-color: #007aff;
+            transition: width 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <nav>
+            <a href="#" onclick="showContent('corpcise')">Corpcise</a>
+            <a href="#" onclick="showContent('corpus-exercises')">Corpus Exercises</a>
+            <a href="#" onclick="showContent('about')">About</a>
+        </nav>
+        <div id="corpcise" class="content active">
+            <h1>Text Error Checker</h1>
+            <textarea id="text" rows="10" cols="50"></textarea><br>
+            <button onclick="checkText()">Check Text</button>
+            <div id="result"></div>
+            <div id="loading" class="loading">Evaluating text, please wait...</div>
+            <div class="progress-bar">
+                <div id="progress" class="progress"></div>
+            </div>
+        </div>
+        <div id="corpus-exercises" class="content">
+            <h1>Corpus Exercises</h1>
+            <h2>Gramatická cvičení</h2>
+            <ul>
+                <li>Procvičování shody podmětu s přísudkem.</li>
+                <li>Procvičování správného používání velkých písmen.</li>
+                <li>Procvičování správného používání interpunkce.</li>
+            </ul>
+            <h2>Pravopisná cvičení</h2>
+            <ul>
+                <li>Procvičování správného psaní i/y.</li>
+                <li>Procvičování správného psaní mě/mně.</li>
+                <li>Procvičování správného psaní předpon s/z.</li>
+            </ul>
+            <h2>Stylová cvičení</h2>
+            <ul>
+                <li>Procvičování jasného a stručného vyjadřování.</li>
+                <li>Procvičování používání synonym.</li>
+                <li>Procvičování správného používání přímé řeči.</li>
+            </ul>
+            <h2>Cvičení z portálu Český národní korpus</h2>
+            <ul>
+                <li><a href="https://korpus.cz/proskoly">Český národní korpus - Pro školy</a> - Repozitář korpusových cvičení.</li>
+                <li><a href="https://korpus.cz/proskoly#22">Česká přísloví</a> - Cvičení na spojování a hledání.</li>
+                <li><a href="https://korpus.cz/proskoly#21">Moderní elektronika</a> - Cvičení na slovní zásobu.</li>
+                <li><a href="https://korpus.cz/proskoly#20">Česká přirovnání</a> - Cvičení na doplňování a hledání.</li>
+                <li><a href="https://korpus.cz/proskoly#19">Rozdíly ve významu slov</a> - Cvičení na porovnávání a hledání.</li>
+                <li><a href="https://korpus.cz/proskoly#18">Idiomy se slovem srdce</a> - Cvičení na doplňování a hledání.</li>
+            </ul>
+        </div>
+        <div id="about" class="content">
+            <h1>About</h1>
+            <p>This application helps students to check their text for errors and suggests exercises to improve their writing skills.</p>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        async function checkText() {
+            const text = document.getElementById('text').value;
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
+            const progressBar = document.getElementById('progress');
+            
+            // Show loading message and reset progress bar
+            loadingDiv.style.display = 'block';
+            resultDiv.innerHTML = '';
+            progressBar.style.width = '0';
+
+            // Simulate progress bar
+            let progress = 0;
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                if (progress >= 100) {
+                    clearInterval(interval);
+                }
+            }, 500);
+
+            const response = await fetch('https://api-inference.huggingface.co/models/bert-base-cased', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer YOUR_HUGGINGFACE_API_KEY',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    inputs: text
+                })
+            });
+
+            const data = await response.json();
+            loadingDiv.style.display = 'none'; // Hide loading message
+
+            if (response.ok) {
+                resultDiv.innerHTML = `<p>${data[0].generated_text}</p>`;
             } else {
-                resultDiv.innerHTML = `<p>There was an error processing your request. Please try again later.</p><p>Status: ${response.status}</p><p>Error: ${data.error.message}</p>`;
+                resultDiv.innerHTML = `<p>There was an error processing your request. Please try again later.</p><p>Status: ${response.status}</p><p>Error: ${data.error}</p>`;
             }
         }
 
