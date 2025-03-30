@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Text Error Checker</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
 <body>
     <h1>Text Error Checker</h1>
@@ -13,25 +14,18 @@
     <script>
         function checkText() {
             const text = document.getElementById('text').value;
-            let errors = [];
-
-            // Check for leading/trailing whitespace
-            if (text.trim() !== text) {
-                errors.push('Text contains leading or trailing whitespace.');
-            }
-
-            // Check for sentences starting without a capital letter
-            const sentences = text.split('.');
-            sentences.forEach(sentence => {
-                const trimmed = sentence.trim();
-                if (trimmed && trimmed[0] !== trimmed[0].toUpperCase()) {
-                    errors.push('Sentence does not start with a capital letter: ' + sentence);
+            $.ajax({
+                url: 'https://api.languagetool.org/v2/check',
+                method: 'POST',
+                data: {
+                    text: text,
+                    language: 'cs'
+                },
+                success: function(response) {
+                    let errors = response.matches.map(match => match.message);
+                    document.getElementById('result').innerHTML = '<ul>' + errors.map(error => '<li>' + error + '</li>').join('') + '</ul>';
                 }
             });
-
-            // Display errors
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = '<ul>' + errors.map(error => '<li>' + error + '</li>').join('') + '</ul>';
         }
     </script>
 </body>
