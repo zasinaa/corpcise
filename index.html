@@ -121,18 +121,20 @@
                 method: 'POST',
                 data: {
                     text: text,
-                    language: 'cs'
+                    language: 'cs',
+                    style: 'formal',
+                    typography: 'true'
                 },
                 success: function(response) {
-                    let errors = response.errors.map(error => error.message);
+                    let errors = response.errors;
                     let resultDiv = document.getElementById('result');
                     if (errors.length === 0) {
                         resultDiv.innerHTML = '<p>No errors found. Great job!</p>';
                     } else {
-                        $.getJSON('exercises.json', function(exercises) {
-                            let suggestedExercises = errors.map(error => exercises[error] || 'No exercise available for this error.');
-                            resultDiv.innerHTML = '<ul>' + suggestedExercises.map(exercise => '<li>' + exercise + '</li>').join('') + '</ul>';
-                        });
+                        let errorList = errors.map(error => {
+                            return `<li>${error.message} - <strong>Suggestion:</strong> ${error.suggestion}</li>`;
+                        }).join('');
+                        resultDiv.innerHTML = `<ul>${errorList}</ul>`;
                     }
                 }
             });
