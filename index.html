@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Corpcise</title>
-    <script src="https://pyscript.net/latest/pyscript.js"></script>
+    <title>Text Error Checker</title>
 </head>
 <body>
     <h1>Text Error Checker</h1>
@@ -11,16 +10,29 @@
     <button onclick="checkText()">Check Text</button>
     <div id="result"></div>
 
-    <py-script>
-        import language_tool_python
+    <script>
+        function checkText() {
+            const text = document.getElementById('text').value;
+            let errors = [];
 
-        tool = language_tool_python.LanguageTool('cs')
+            // Check for leading/trailing whitespace
+            if (text.trim() !== text) {
+                errors.push('Text contains leading or trailing whitespace.');
+            }
 
-        def checkText():
-            text = Element("text").element.value
-            matches = tool.check(text)
-            errors = [match.message for match in matches]
-            Element("result").element.innerHTML = "<ul>" + "".join(f"<li>{error}</li>" for error in errors) + "</ul>"
-    </py-script>
+            // Check for sentences starting without a capital letter
+            const sentences = text.split('.');
+            sentences.forEach(sentence => {
+                const trimmed = sentence.trim();
+                if (trimmed && trimmed[0] !== trimmed[0].toUpperCase()) {
+                    errors.push('Sentence does not start with a capital letter: ' + sentence);
+                }
+            });
+
+            // Display errors
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = '<ul>' + errors.map(error => '<li>' + error + '</li>').join('') + '</ul>';
+        }
+    </script>
 </body>
 </html>
