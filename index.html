@@ -7,8 +7,8 @@
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            background-color: #121212;
+            color: #e0e0e0;
             margin: 0;
             padding: 0;
             display: flex;
@@ -17,7 +17,7 @@
             height: 100vh;
         }
         .container {
-            background-color: #fff;
+            background-color: #1e1e1e;
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             padding: 20px;
@@ -31,10 +31,12 @@
         textarea {
             width: 100%;
             height: 150px;
-            border: 1px solid #ccc;
+            border: 1px solid #333;
             border-radius: 8px;
             padding: 10px;
             font-size: 16px;
+            background-color: #2e2e2e;
+            color: #e0e0e0;
             margin-bottom: 20px;
         }
         button {
@@ -57,16 +59,36 @@
             padding: 0;
         }
         li {
-            background-color: #f9f9f9;
-            border: 1px solid #ddd;
+            background-color: #2e2e2e;
+            border: 1px solid #444;
             border-radius: 8px;
             padding: 10px;
             margin-bottom: 10px;
+        }
+        nav {
+            background-color: #1e1e1e;
+            padding: 10px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: #e0e0e0;
+            text-decoration: none;
+            margin: 0 15px;
+            font-size: 18px;
+        }
+        nav a:hover {
+            color: #007aff;
         }
     </style>
 </head>
 <body>
     <div class="container">
+        <nav>
+            <a href="#corpcise">Corpcise</a>
+            <a href="#corpus-exercises">Corpus Exercises</a>
+            <a href="#about">About</a>
+        </nav>
         <h1>Text Error Checker</h1>
         <textarea id="text" rows="10" cols="50"></textarea><br>
         <button onclick="checkText()">Check Text</button>
@@ -85,12 +107,15 @@
                     language: 'cs'
                 },
                 success: function(response) {
-                    let errors = response.matches.map(match => match.message);
+                    let errors = response.matches.map(match => match.ruleId);
                     let resultDiv = document.getElementById('result');
                     if (errors.length === 0) {
                         resultDiv.innerHTML = '<p>No errors found. Great job!</p>';
                     } else {
-                        resultDiv.innerHTML = '<ul>' + errors.map(error => '<li>' + error + '</li>').join('') + '</ul>';
+                        $.getJSON('exercises.json', function(exercises) {
+                            let suggestedExercises = errors.map(error => exercises[error]);
+                            resultDiv.innerHTML = '<ul>' + suggestedExercises.map(exercise => '<li>' + exercise + '</li>').join('') + '</ul>';
+                        });
                     }
                 }
             });
