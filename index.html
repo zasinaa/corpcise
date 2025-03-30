@@ -76,23 +76,41 @@
             text-decoration: none;
             margin: 0 15px;
             font-size: 18px;
+            cursor: pointer;
         }
         nav a:hover {
             color: #007aff;
+        }
+        .content {
+            display: none;
+        }
+        .active {
+            display: block;
         }
     </style>
 </head>
 <body>
     <div class="container">
         <nav>
-            <a href="#corpcise">Corpcise</a>
-            <a href="#corpus-exercises">Corpus Exercises</a>
-            <a href="#about">About</a>
+            <a href="#" onclick="showContent('corpcise')">Corpcise</a>
+            <a href="#" onclick="showContent('corpus-exercises')">Corpus Exercises</a>
+            <a href="#" onclick="showContent('about')">About</a>
         </nav>
-        <h1>Text Error Checker</h1>
-        <textarea id="text" rows="10" cols="50"></textarea><br>
-        <button onclick="checkText()">Check Text</button>
-        <div id="result"></div>
+        <div id="corpcise" class="content active">
+            <h1>Text Error Checker</h1>
+            <textarea id="text" rows="10" cols="50"></textarea><br>
+            <button onclick="checkText()">Check Text</button>
+            <div id="result"></div>
+        </div>
+        <div id="corpus-exercises" class="content">
+            <h1>Corpus Exercises</h1>
+            <p>Here you can find various exercises to improve your text.</p>
+        </div>
+        <div id="about" class="content">
+            <h1>About</h1>
+            <p>This application helps students to check their text for errors and suggests exercises to improve their writing skills.
+            Developper: A Zasina</p>
+        </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -100,7 +118,7 @@
         function checkText() {
             const text = document.getElementById('text').value;
             $.ajax({
-                url: 'https://api.languagetool.org/v2/check',
+                url: 'https://www.opravidlo.cz/api/check',
                 method: 'POST',
                 data: {
                     text: text,
@@ -119,6 +137,13 @@
                     }
                 }
             });
+        }
+
+        function showContent(id) {
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(id).classList.add('active');
         }
     </script>
 </body>
