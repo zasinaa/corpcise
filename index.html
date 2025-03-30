@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Corpcise</title>
+    <title>Text Error Checker</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
@@ -108,8 +108,7 @@
         </div>
         <div id="about" class="content">
             <h1>About</h1>
-            <p>This application helps students to check their text for errors and suggests exercises to improve their writing skills.
-            Developper: A Zasina</p>
+            <p>This application helps students to check their text for errors and suggests exercises to improve their writing skills.</p>
         </div>
     </div>
 
@@ -125,13 +124,13 @@
                     language: 'cs'
                 },
                 success: function(response) {
-                    let errors = response.matches.map(match => match.ruleId);
+                    let errors = response.errors.map(error => error.message);
                     let resultDiv = document.getElementById('result');
                     if (errors.length === 0) {
                         resultDiv.innerHTML = '<p>No errors found. Great job!</p>';
                     } else {
                         $.getJSON('exercises.json', function(exercises) {
-                            let suggestedExercises = errors.map(error => exercises[error]);
+                            let suggestedExercises = errors.map(error => exercises[error] || 'No exercise available for this error.');
                             resultDiv.innerHTML = '<ul>' + suggestedExercises.map(exercise => '<li>' + exercise + '</li>').join('') + '</ul>';
                         });
                     }
